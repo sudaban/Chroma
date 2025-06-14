@@ -6,11 +6,11 @@ static void ConsoleTitle() {
 #ifdef _WIN32
     system("title Chroma GTPS Console");
 #else
-    std::cout << "\033]0;" << "title Chroma GTPS Console" << "\007";
+    std::cout << "\033]0;" << "Chroma GTPS Console" << "\007";
 #endif
 }
 
-int main(int argc, char *argv)
+int main(int argc, char **argv)
 {
     ConsoleTitle();
     Logger("Starting Server.", LogType::Info);

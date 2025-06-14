@@ -35,6 +35,8 @@
 x64/
 .vs/
 enet_build/
+ChromaServer.dir/
+
 
 # CMake Files
 CMakeCache.txt
