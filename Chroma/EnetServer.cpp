@@ -1,7 +1,10 @@
-#include "EnetServer.h"
-#include "Log.h"
 #include <cstring>
 #include <iostream>
+#include "EnetServer.h"
+#include "Log.h"
+#include "Player.h"
+#include "PacketHandler.h"
+
 
 ENetServer::ENetServer(const std::string& address, uint16_t port, size_t maxClients, size_t channels)
     : m_address(address), m_port(port), m_maxClients(maxClients), m_channels(channels)
@@ -113,8 +116,10 @@ void ENetServer::Run()
             {
             case ENET_EVENT_TYPE_CONNECT:
             {
-                if (event.peer->data != nullptr)
+                if (event.peer->data != nullptr) 
                     break;
+                //Player* player = new Player(event.peer);
+                //event.peer->data = player;
                 Logger("new cli. ID: " + std::to_string(event.peer->connectID), LogType::Info);
                 sendPacket(event.peer, 1, NULL, 1);
                 break;
@@ -132,6 +137,7 @@ void ENetServer::Run()
                     break;
 
                 Logger("cli dc, ID: " + std::to_string(event.peer->connectID), LogType::Debug);
+                delete static_cast<Player*>(event.peer->data);
                 event.peer->data = nullptr;
                 break;
             }

@@ -14,10 +14,13 @@ add_executable(ChromaServer
     Chroma/EnetServer.cpp
     Chroma/Log.cpp
     Chroma/PacketHandler.cpp
+    Chroma/Player.cpp
+    Chroma/inc/Player.h
     Chroma/inc/EnetServer.h
     Chroma/inc/Log.h
     Chroma/inc/GameUpdatePacket.h
     Chroma/inc/PacketHandler.h
+    Chroma/inc/Text.h
 )
 
 target_include_directories(ChromaServer PRIVATE
