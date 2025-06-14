@@ -13,6 +13,9 @@ add_executable(ChromaServer
     Chroma/Chroma.cpp
     Chroma/EnetServer.cpp
     Chroma/Log.cpp
+    Chroma/inc/EnetServer.h
+    Chroma/inc/Log.h
+    Chroma/inc/GameUpdatePacket.h
 )
 
 target_include_directories(ChromaServer PRIVATE
