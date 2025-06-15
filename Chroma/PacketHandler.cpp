@@ -1,64 +1,82 @@
 #include "PacketHandler.h"
-#include "GameUpdatePacket.h"
+#include <Packet.h>
 #include "Log.h"
 #include "Text.h"
 
-void PacketHandler::Text(Player* ply, ENetPacket* packet)
+void PacketHandler::Text(Client cli, ENetPacket* packet)
 {
+    Player* ply = cli.GetPlayer();
+
     if (!ply || !packet || !packet->data || packet->dataLength < 5)
     {
         Logger("Invalid packet or player reference.", LogType::Error);
         return;
     }
+
     std::string raw(reinterpret_cast<char*>(packet->data + 4), packet->dataLength - 4);
 
-    if (raw.empty()) 
+    if (raw.empty())
     {
-        Logger("Received empty action packet.", LogType::Warning);
+        Logger("Received empty text packet.", LogType::Warning);
         return;
     }
 
-    std::string erased_action = Text::to_erase("action|", raw);
+    std::string action = Text::to_erase("action|", raw);
 
-    if (raw.starts_with("requestedName"))
+    if (action.starts_with("requestedName"))
     {
-        ply->Login(ply, raw, true, false);
+        ply->Login(raw, true, false);
     }
-    else if (raw.starts_with("tankIDName"))
+    else if (action.starts_with("tankIDName"))
     {
-        ply->Login(ply, raw, false, false);
+        ply->Login(raw, false, false);
+    }
+    else if (action.starts_with("protocol"))
+    {
+        ply->Login(raw, false, true);
     }
     else
     {
-        Logger("Unknown action received: " + erased_action, LogType::Error);
+        Logger("Unhandled Action Received: " + action, LogType::Error);
     }
 }
 
 
-void PacketHandler::Tank(Player* ply, ENetPacket* packet) {}
-
-void PacketHandler::ProcessPacket(ENetPeer* peer, ENetPacket* packet)
+void PacketHandler::Tank(Client cli, ENetPacket* packet)
 {
-	Player* ply = (Player*)peer->data;
-	switch (*(int*)packet->data)
-	{
-	case NET_MESSAGE_GENERIC_TEXT: case NET_MESSAGE_GAME_MESSAGE:
-	{
-		Logger("Received text, processing...", LogType::Info);
-		Text(ply, packet);
-		break;
-	}
-	case NET_MESSAGE_GAME_PACKET:
-	{
-		Logger("Received tank, processing...", LogType::Info);
-		Tank(ply, packet);
-		break;
-	}
-	default:
-	{
-		Logger("unknown packet: " + std::to_string(*(int*)packet->data), LogType::Debug);
-		break;
-	}
-	}
-	enet_packet_destroy(packet);
+    uint32_t packetType = *(uint32_t*)packet->data;
+    switch (packetType)
+    {
+    default:
+    {
+        Logger("Unhandled Tank Packet Received: " + Packet::GetTankPacketName(packetType), LogType::Debug);
+        break;
+    }
+    }
+}
+
+void PacketHandler::ProcessPacket(Client cli, ENetPacket* packet)
+{
+
+    uint32_t packetType = *(uint32_t*)packet->data;
+
+    switch (packetType)
+    {
+    case NET_MESSAGE_GENERIC_TEXT: case NET_MESSAGE_GAME_MESSAGE:
+    {
+        Text(cli, packet);
+        break;
+    }
+    case NET_MESSAGE_GAME_PACKET:
+    {
+        Tank(cli, packet);
+        break;
+    }
+    default:
+    {
+        Logger("Unknown Packet Received: " + Packet::GetTankPacketName(packetType), LogType::Debug);
+        break;
+    }
+    }
+    enet_packet_destroy(packet);
 }
