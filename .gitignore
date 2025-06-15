@@ -57,3 +57,5 @@ ZERO_CHECK.vcxproj
 ZERO_CHECK.vcxproj.filters
 ChromaServer.vcxproj
 ChromaServer.vcxproj.filters
+ChromaServer.vcxproj.user
+ALL_BUILD.vcxproj.user
