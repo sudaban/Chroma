@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "PacketHandler.h"
 #include "Client.h"
-#include "VariantSender.h"
+#include "Variant.h"
 
 ENetServer::ENetServer(const std::string& address, uint16_t port, size_t maxClients, size_t channels)
     : m_address(address), m_port(port), m_maxClients(maxClients), m_channels(channels)
@@ -26,7 +26,7 @@ ENetServer::ENetServer(const std::string& address, uint16_t port, size_t maxClie
         Logger("Failed to create ENet host, port might be in use.", LogType::Error);
         throw std::runtime_error("Failed to create ENet host");
     }
-   // m_host->usingNewPacketForServer = true; // Growtopia 5.19 Protocol (You need mod enet)
+    m_host->usingNewPacketForServer = true; // Growtopia 5.19 Protocol (You need mod enet)
     m_host->checksum = enet_crc32;
     enet_host_compress_with_range_coder(m_host);
 
@@ -125,8 +125,14 @@ void ENetServer::Run()
                 Client cli(player, event.packet);
 
                 Logger("new cli. ID: " + std::to_string(event.peer->connectID), LogType::Info);
+
                 sendPacket(event.peer, 1, NULL, 1);
-                VariantSender::OnConsoleMessage(player, "Welcome!");
+
+                Variant v;
+                v.add("OnConsoleMessage");
+                v.add("test");
+                v.send(event.peer);
+               
                 break;
             }
             case ENET_EVENT_TYPE_RECEIVE:

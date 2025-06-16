@@ -3,7 +3,6 @@
 
 #include <string>
 #include <enet/enet.h>
-#include "Variant.h"
 #include "Packet.h"
 
 class Player
@@ -16,8 +15,6 @@ public:
 
 	void Login(const std::string& data, bool guest, bool new_login);
 	void SendPacket(TankPacket& tp, uint8_t* extraData = nullptr, int extraDataLength = 0);
-	void SendVariantPacket(Variant::VariantData& v);
-	void SendVariant(const std::vector<Variant::ArgValue>& args, int32_t netID = -1, uint32_t delay = 0U);
 
 	inline const std::string& GetReqName() const { return m_req_name; }
 	inline const std::string& GetGrowID() const { return m_growid; }

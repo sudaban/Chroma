@@ -52,53 +52,6 @@ void Player::Login(const std::string& data, bool guest, bool new_login)
 	m_platform_id = Text::parser("platformID", data);
 }
 
-void Player::SendVariantPacket(Variant::VariantData& v)
-{
-	Logger("Sending..", LogType::Info);
-	const uint8_t* data = v.packet.data();
-	size_t dataSize = v.packet.size();
-
-	ENetPacket* packet = enet_packet_create(data, dataSize, ENET_PACKET_FLAG_RELIABLE);
-
-	if (!packet)
-		return;
-
-	if (enet_peer_send(m_peer, 0, packet) == 0)
-	{
-		Logger("Sent", LogType::Info);
-	}
-	else
-	{
-		enet_packet_destroy(packet);
-		Logger("Failed to send packet", LogType::Error);
-	}
-}
-
-void Player::SendVariant(const std::vector<Variant::ArgValue>& args, int32_t netID, uint32_t delay)
-{
-	Variant::VariantData vdata = Variant::call(args, netID, delay);
-
-	auto parsed = Variant::from(vdata.packet);
-	for (const auto& arg : parsed.args) {
-		if (auto str = std::get_if<std::string>(&arg)) {
-			Logger("Parsed string: " + *str, LogType::Info);
-		}
-		else if (auto i32 = std::get_if<int32_t>(&arg)) {
-			Logger("Parsed int32: " + std::to_string(*i32), LogType::Info);
-		}
-		else if (auto u32 = std::get_if<uint32_t>(&arg)) {
-			Logger("Parsed uint32: " + std::to_string(*u32), LogType::Info);
-		}
-		else if (auto floats = std::get_if<std::vector<float>>(&arg)) {
-			std::string flist;
-			for (float f : *floats) flist += std::to_string(f) + " ";
-			Logger("Parsed floats: " + flist, LogType::Info);
-		}
-	}
-
-	SendVariantPacket(vdata);
-}
-
 
 void Player::SendPacket(TankPacket& tp, uint8_t* extraData, int extraDataLength)
 {
@@ -138,20 +91,4 @@ void Player::SendPacket(TankPacket& tp, uint8_t* extraData, int extraDataLength)
 	enet_peer_send(m_peer, 0, packet);
 
 	delete[] dataToSend;
-}
-
-
-void GlobalMessage(ENetHost* server, const std::string& message) 
-{
-	for (ENetPeer* currentPeer = server->peers;
-		currentPeer < &server->peers[server->peerCount];
-		++currentPeer) 
-	{
-
-		if (currentPeer->state != ENET_PEER_STATE_CONNECTED || currentPeer->data == nullptr)
-			continue;
-
-		Player* player = static_cast<Player*>(currentPeer->data);
-		// There will be console message packet
-	}
 }
