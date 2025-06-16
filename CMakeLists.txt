@@ -23,7 +23,7 @@ add_executable(ChromaServer
     Chroma/inc/PacketHandler.h
     Chroma/inc/Text.h
     Chroma/inc/Variant.h
-    Chroma/inc/VariantSender.h
+    
     Chroma/inc/Client.h
 )
 
