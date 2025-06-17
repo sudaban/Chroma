@@ -11,6 +11,7 @@ public:
 	~Client();
 
 	inline Player* GetPlayer() const { return m_player; }
+	inline ENetPacket* GetData() const { return m_data; }
 
 private:
 	Player* m_player;

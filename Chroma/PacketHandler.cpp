@@ -3,21 +3,26 @@
 #include "Log.h"
 #include "Text.h"
 
-void PacketHandler::Text(Client cli, ENetPacket* packet)
+PacketHandler::PacketHandler(ENetPacket* p)
+{
+    m_packet = p;
+}
+
+void PacketHandler::Text(Client cli)
 {
     Player* ply = cli.GetPlayer();
 
-    if (!ply || !packet || !packet->data || packet->dataLength < 5)
+    if (!ply || !m_packet || !m_packet->data || m_packet->dataLength < 5)
     {
-        Logger("Invalid packet or player reference.", LogType::Error);
+        Logger("Invalid m_packet or player reference.", LogType::Error);
         return;
     }
 
-    std::string raw(reinterpret_cast<char*>(packet->data + 4), packet->dataLength - 4);
+    std::string raw(reinterpret_cast<char*>(m_packet->data + 4), m_packet->dataLength - 4);
 
     if (raw.empty())
     {
-        Logger("Received empty text packet.", LogType::Warning);
+        Logger("Received empty text m_packet.", LogType::Warning);
         return;
     }
 
@@ -42,9 +47,9 @@ void PacketHandler::Text(Client cli, ENetPacket* packet)
 }
 
 
-void PacketHandler::Tank(Client cli, ENetPacket* packet)
+void PacketHandler::Tank(Client cli)
 {
-    uint32_t packetType = *(uint32_t*)packet->data;
+    uint32_t packetType = *(uint32_t*)m_packet->data;
     switch (packetType)
     {
     default:
@@ -55,21 +60,21 @@ void PacketHandler::Tank(Client cli, ENetPacket* packet)
     }
 }
 
-void PacketHandler::ProcessPacket(Client cli, ENetPacket* packet)
+void PacketHandler::ProcessPacket(Client cli)
 {
 
-    uint32_t packetType = *(uint32_t*)packet->data;
+    uint32_t packetType = *(uint32_t*)m_packet->data;
 
     switch (packetType)
     {
     case NET_MESSAGE_GENERIC_TEXT: case NET_MESSAGE_GAME_MESSAGE:
     {
-        Text(cli, packet);
+        Text(cli);
         break;
     }
     case NET_MESSAGE_GAME_PACKET:
     {
-        Tank(cli, packet);
+        Tank(cli);
         break;
     }
     default:
@@ -78,5 +83,5 @@ void PacketHandler::ProcessPacket(Client cli, ENetPacket* packet)
         break;
     }
     }
-    enet_packet_destroy(packet);
+    enet_packet_destroy(m_packet);
 }

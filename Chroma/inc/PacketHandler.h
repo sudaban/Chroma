@@ -7,9 +7,12 @@
 class PacketHandler
 {
 public:
-	void Text(Client cli, ENetPacket* packet); // Handle text packets
-	void Tank(Client cli, ENetPacket* packet); // Handle tank packets a.k.a. GameUpdatePacket for client-server communication.
-	void ProcessPacket(Client cli, ENetPacket* packet);
+	PacketHandler(ENetPacket* packet);
+	void Text(Client cli); // Handle text packets
+	void Tank(Client cli); // Handle tank packets a.k.a. GameUpdatePacket for client-server communication.
+	void ProcessPacket(Client cli);
+private:
+	ENetPacket* m_packet;
 };
 
 #endif //!PACKETHANDLER_H

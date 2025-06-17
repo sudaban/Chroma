@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Log.h"
 #include "EnetServer.h"
+#include <ItemDatabase.h>
 
 static void ConsoleTitle() {
 #ifdef _WIN32
@@ -13,7 +14,6 @@ static void ConsoleTitle() {
 int main(int argc, char **argv)
 {
     ConsoleTitle();
-    Logger("Starting Server.", LogType::Info);
     {
         try
         {
@@ -22,6 +22,13 @@ int main(int argc, char **argv)
             {
                 Logger("Failed to start server!", LogType::Error);
                 return 1;
+            }
+
+            ItemDatabase db;
+            if (!db.Decode("items.dat"))
+            {
+                Logger("Failed to decode items.dat!", LogType::Error);
+                return 2;
             }
 
             Logger("Press ENTER to stop server...", LogType::Info);

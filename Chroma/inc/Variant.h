@@ -8,7 +8,7 @@ class Variant {
 public:
     Variant(int delay = 0, int netID = -1)
         : index(0) {
-        data.resize(61, 0); // initialize with zeros
+        data.resize(61, 0);
 
         int32_t messageType = 0x4;
         int32_t packetType = 0x1;

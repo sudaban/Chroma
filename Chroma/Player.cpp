@@ -1,12 +1,17 @@
 #include "Player.h"
 #include "Log.h"
 #include "Text.h"
+#include <ItemDatabase.h>
+#include <variant.h>
 
 Player::Player(ENetPeer* peer)
 {
 	if (peer)
 		this->m_peer = peer;
 	else return;
+
+	peer->data = this;
+	
 }
 Player::~Player() {/*destructor*/ }
 
@@ -16,6 +21,8 @@ void Player::Login(const std::string& data, bool guest, bool new_login)
 
 	if (guest)
 	{
+		m_req_name = Text::parser("requestedName", data);
+		Logger("Guest Login Attempt: " + m_req_name, LogType::Debug);
 		m_guest = true;
 	}
 
@@ -23,33 +30,39 @@ void Player::Login(const std::string& data, bool guest, bool new_login)
 	{
 		m_growid = Text::parser("growId", data);
 		m_pass = Text::parser("password", data);
-		Logger("Logging: " + m_growid, LogType::Debug);
-
-		if (m_growid == "_register_" && m_pass == "_register_")
-		{  // NYRU.net login
+		
+		if (m_growid == "_register_" && m_pass == "_register_") // custom login page settings (will be changed later..)
+		{
+			m_req_name = "Guest_" + std::to_string(rand() % 899 + 100);
+			Logger("Guest Login Attempt Received", LogType::Debug);
 			m_guest = true;
 		}
+		else Logger("Login Attempt: " + m_growid, LogType::Debug);
+
 	}
 	else
 	{
 		m_growid = Text::parser("tankIDName", data);
 		m_pass = Text::parser("tankIDPass", data);
-		Logger("Logging: " + m_growid, LogType::Debug);
+		Logger("Login Attempt: " + m_growid, LogType::Debug);
 	}
-
-	std::string requestedName = Text::parser("requestedName", data);
-
-	if (requestedName.empty()) {
-		requestedName = "Guest_";
-	}
-
-	m_req_name = requestedName + std::to_string(rand() % 899 + 100);
 
 	m_game_version = Text::parser("game_version", data);
 	m_country = Text::parser("country", data);
 	m_rid = Text::parser("rid", data);
 	m_mac = Text::parser("mac", data);
 	m_platform_id = Text::parser("platformID", data);
+
+	Variant v;
+	v.add("OnSuperMainStartAcceptLogonHrdxs47254722215a");
+	v.add(ItemDatabase::items_data_hash);
+	v.add("www.growtopia1.com");
+	v.add("cache/");
+	v.add("chroma-based-source"); // meaningless 'blocked domains' area
+	v.add("proto=200|choosemusic=audio/mp3/western.mp3|active_holiday=0|wing_week_day=0|ubi_week_day=0|server_tick=8310098|clash_active=1|drop_lavacheck_faster=1|isPayingUser=1|usingStoreNavigation=1|enableInventoryTab=1|bigBackpack=1|");
+	//v.add(0); // player_tribute.dat hash
+	v.send(m_peer);
+
 }
 
 

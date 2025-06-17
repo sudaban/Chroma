@@ -3,6 +3,7 @@
 #include "EnetServer.h"
 #include "Log.h"
 #include "Player.h"
+#include <ItemDatabase.h>
 #include "PacketHandler.h"
 #include "Client.h"
 #include "Variant.h"
@@ -26,11 +27,11 @@ ENetServer::ENetServer(const std::string& address, uint16_t port, size_t maxClie
         Logger("Failed to create ENet host, port might be in use.", LogType::Error);
         throw std::runtime_error("Failed to create ENet host");
     }
-    m_host->usingNewPacketForServer = true; // Growtopia 5.19 Protocol (You need mod enet)
+    m_host->usingNewPacketForServer = true; // Growtopia 5.19 Protocol (You need to modify enet)
     m_host->checksum = enet_crc32;
     enet_host_compress_with_range_coder(m_host);
 
-    Logger("ENetServer running on " + m_address + ":" + std::to_string(m_port), LogType::Info);
+    Logger("Enet Server running on " + m_address + ":" + std::to_string(m_port), LogType::Info);
 }
 
 ENetServer::~ENetServer()
@@ -120,7 +121,6 @@ void ENetServer::Run()
                 if (event.peer->data != nullptr) 
                     break;
                 Player* player = new Player(event.peer);
-                event.peer->data = player;
 
                 Client cli(player, event.packet);
 
@@ -130,16 +130,21 @@ void ENetServer::Run()
 
                 Variant v;
                 v.add("OnConsoleMessage");
-                v.add("test");
+                v.add("Chroma based Growtopia Server");
                 v.send(event.peer);
-               
+
                 break;
             }
             case ENET_EVENT_TYPE_RECEIVE:
             {
                 if (event.peer == nullptr || event.peer->data == nullptr)
                     break;
-                enet_packet_destroy(event.packet);
+
+                Client cli((Player*)event.peer->data, event.packet);
+
+                PacketHandler p(event.packet);
+                p.ProcessPacket(cli);
+
                 break;
             }
             case ENET_EVENT_TYPE_DISCONNECT:
@@ -150,6 +155,7 @@ void ENetServer::Run()
                 Logger("cli dc, ID: " + std::to_string(event.peer->connectID), LogType::Debug);
                 delete static_cast<Player*>(event.peer->data);
                 event.peer->data = nullptr;
+
                 break;
             }
             case ENET_EVENT_TYPE_NONE:
