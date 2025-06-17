@@ -1,8 +1,8 @@
-#include <ItemDatabase.h>
+#include "ItemDatabase.h"
 #include <string>
 #include <fstream>
-#include <Log.h>
-#include <Packet.h>
+#include "Log.h"
+#include "Packet.h"
 #include <filesystem>
 
 int ItemDatabase::items_data_size = 0;

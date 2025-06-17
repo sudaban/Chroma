@@ -7,6 +7,7 @@
 #include "PacketHandler.h"
 #include "Client.h"
 #include "Variant.h"
+#include "VariantSender.h"
 
 ENetServer::ENetServer(const std::string& address, uint16_t port, size_t maxClients, size_t channels)
     : m_address(address), m_port(port), m_maxClients(maxClients), m_channels(channels)
@@ -127,12 +128,8 @@ void ENetServer::Run()
                 Logger("new cli. ID: " + std::to_string(event.peer->connectID), LogType::Info);
 
                 sendPacket(event.peer, 1, NULL, 1);
-
-                Variant v;
-                v.add("OnConsoleMessage");
-                v.add("Chroma based Growtopia Server");
-                v.send(event.peer);
-
+                
+                VariantSender::OnConsoleMessage(player, "Welcome to `8Chroma`` Private server. Server is currently at `4development ``by our team.");
                 break;
             }
             case ENET_EVENT_TYPE_RECEIVE:
@@ -155,7 +152,6 @@ void ENetServer::Run()
                 Logger("cli dc, ID: " + std::to_string(event.peer->connectID), LogType::Debug);
                 delete static_cast<Player*>(event.peer->data);
                 event.peer->data = nullptr;
-
                 break;
             }
             case ENET_EVENT_TYPE_NONE:

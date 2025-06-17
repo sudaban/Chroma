@@ -1,5 +1,5 @@
 #include "PacketHandler.h"
-#include <Packet.h>
+#include "Packet.h"
 #include "Log.h"
 #include "Text.h"
 
@@ -39,6 +39,10 @@ void PacketHandler::Text(Client cli)
     else if (action.starts_with("protocol"))
     {
         ply->Login(raw, false, true);
+    }
+    else if (action.find("refresh_item_data\n") != std::string::npos)
+    {
+        Logger("Cli requested item data", LogType::Info);
     }
     else
     {

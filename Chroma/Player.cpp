@@ -1,8 +1,8 @@
 #include "Player.h"
 #include "Log.h"
 #include "Text.h"
-#include <ItemDatabase.h>
-#include <variant.h>
+#include "ItemDatabase.h"
+#include "VariantSender.h"
 
 Player::Player(ENetPeer* peer)
 {
@@ -53,16 +53,8 @@ void Player::Login(const std::string& data, bool guest, bool new_login)
 	m_mac = Text::parser("mac", data);
 	m_platform_id = Text::parser("platformID", data);
 
-	Variant v;
-	v.add("OnSuperMainStartAcceptLogonHrdxs47254722215a");
-	v.add(ItemDatabase::items_data_hash);
-	v.add("www.growtopia1.com");
-	v.add("cache/");
-	v.add("chroma-based-source"); // meaningless 'blocked domains' area
-	v.add("proto=200|choosemusic=audio/mp3/western.mp3|active_holiday=0|wing_week_day=0|ubi_week_day=0|server_tick=8310098|clash_active=1|drop_lavacheck_faster=1|isPayingUser=1|usingStoreNavigation=1|enableInventoryTab=1|bigBackpack=1|");
-	//v.add(0); // player_tribute.dat hash
-	v.send(m_peer);
-
+	VariantSender::OnSuperMain(this, ItemDatabase::items_data_hash, "www.growtopia1.com", "cache", "chroma-based-source", "proto=200|choosemusic=audio/mp3/western.mp3|active_holiday=0|wing_week_day=0|ubi_week_day=0|server_tick=8310098|clash_active=1|drop_lavacheck_faster=1|isPayingUser=1|usingStoreNavigation=1|enableInventoryTab=1|bigBackpack=1|", 0);
+	VariantSender::OnRequestWorldMenu(this);
 }
 
 

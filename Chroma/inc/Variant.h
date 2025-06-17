@@ -1,3 +1,6 @@
+#ifndef VARIANT_H
+#define VARIANT_H
+
 #include <vector>
 #include <string>
 #include <cstring>
@@ -96,3 +99,7 @@ private:
             data[60] = index;
     }
 };
+
+
+
+#endif // !VARIANT_H
