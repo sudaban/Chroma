@@ -27,9 +27,8 @@ public:
     
     static void OnTalkBubble(Player* p, int netid, const std::string& text)
     {
-        Variant v;
+        Variant v(0, netid);
         v.add("OnTalkBubble");
-        v.add(netid);
         v.add(text);
         v.send(p->GetPeer());
     }
@@ -102,9 +101,8 @@ public:
     
     static void OnPlayPositioned(Player* p, int netid, const std::string file)
     {
-        Variant v;
+        Variant v(0, netid);
         v.add("OnPlayPositioned");
-        v.add(netid);
         v.add(file);
         v.send(p->GetPeer());
     }
@@ -112,8 +110,7 @@ public:
     static void OnSetPos(Player* p, int netid, int pos_x, int pos_y)
     {
         
-        Variant v;
-        v.add(netid);
+        Variant v(0, netid);
         v.add((float)pos_x, (float)pos_y);
         v.send(p->GetPeer());
     }
@@ -208,7 +205,6 @@ public:
     {
         Variant v(0, netid);
         v.add("OnRaceStart");
-        v.add(netid);
         v.send(p->GetPeer());
     }
 
