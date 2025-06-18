@@ -175,7 +175,7 @@ public:
     static void OnCountdownUpdate(Player* p, int netid, int score)
     {
         Variant v(0, netid);
-        v.add("OnCoundownUpdate");
+        v.add("OnCountdownUpdate");
         v.add(score);
         v.send(p->GetPeer());
     }
