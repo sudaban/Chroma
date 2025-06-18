@@ -122,14 +122,11 @@ void ENetServer::Run()
                 if (event.peer->data != nullptr) 
                     break;
                 Player* player = new Player(event.peer);
-
-                Client cli(player, event.packet);
-
+                
                 Logger("new cli. ID: " + std::to_string(event.peer->connectID), LogType::Info);
 
                 sendPacket(event.peer, 1, NULL, 1);
-                
-                VariantSender::OnConsoleMessage(player, "`$Welcome to `6Chroma`` Private Server. Server is currently at `4development ``by our team.");
+                VariantSender::OnConsoleMessage(player, "Connecting to `wchroma server``..");
                 break;
             }
             case ENET_EVENT_TYPE_RECEIVE:
@@ -137,9 +134,11 @@ void ENetServer::Run()
                 if (event.peer == nullptr || event.peer->data == nullptr)
                     break;
 
-                Client cli((Player*)event.peer->data, event.packet);
+                std::string text_packet(reinterpret_cast<char*>(event.packet->data + 4), event.packet->dataLength - 4);
 
-                PacketHandler p(event.packet);
+                Client cli((Player*)event.peer->data, event.packet, text_packet);
+
+                PacketHandler p(event.packet, text_packet);
                 p.ProcessPacket(cli);
 
                 break;
@@ -149,7 +148,7 @@ void ENetServer::Run()
                 if (event.peer == nullptr || event.peer->data == nullptr)
                     break;
 
-                Logger("cli dc, ID: " + std::to_string(event.peer->connectID), LogType::Debug);
+                Logger("cli dc, ID: " + event.peer->connectID == 0 ? "NULL" : std::to_string(event.peer->connectID), LogType::Debug);
                 delete static_cast<Player*>(event.peer->data);
                 event.peer->data = nullptr;
                 break;

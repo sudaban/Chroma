@@ -7,6 +7,7 @@ class Action
 {
 public:
 	static void RefreshItemsData(Client cli);
+	static void EnterGame(Client cli);
 };
 
 #endif

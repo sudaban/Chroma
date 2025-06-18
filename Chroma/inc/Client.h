@@ -7,15 +7,17 @@ class Client
 {
 public:
 
-	Client(Player* player, ENetPacket* data);
+	Client(Player* player, ENetPacket* tank_data, const std::string& text_data);
 	~Client();
 
 	inline Player* GetPlayer() const { return m_player; }
-	inline ENetPacket* GetData() const { return m_data; }
+	inline ENetPacket* GetTankData() const { return m_tank_data; }
+	inline std::string GetTextData() const { return m_text_data; }
 
 private:
 	Player* m_player;
-	ENetPacket* m_data;
+	ENetPacket* m_tank_data;
+	std::string m_text_data;
 };
 
 #endif
