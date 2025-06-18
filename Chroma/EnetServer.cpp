@@ -126,7 +126,7 @@ void ENetServer::Run()
                 Logger("new cli. ID: " + std::to_string(event.peer->connectID), LogType::Info);
 
                 sendPacket(event.peer, 1, NULL, 1);
-                VariantSender::OnConsoleMessage(player, "Connecting to `wchroma server``..");
+                VariantSender::OnConsoleMessage(player, "Connecting to `wchroma server``...");
                 break;
             }
             case ENET_EVENT_TYPE_RECEIVE:
@@ -148,7 +148,8 @@ void ENetServer::Run()
                 if (event.peer == nullptr || event.peer->data == nullptr)
                     break;
 
-                Logger("cli dc, ID: " + event.peer->connectID == 0 ? "NULL" : std::to_string(event.peer->connectID), LogType::Debug);
+                Logger("cli dc, ID: " + (event.peer->connectID == 0 ? "NULL" : std::to_string(event.peer->connectID)), LogType::Debug);
+
                 delete static_cast<Player*>(event.peer->data);
                 event.peer->data = nullptr;
                 break;

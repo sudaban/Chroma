@@ -25,7 +25,7 @@ add_executable(ChromaServer
     Chroma/inc/Variant.h
     
     Chroma/inc/Client.h
- "Chroma/inc/ItemDefinations.h" "Chroma/inc/ItemDatabase.h" "Chroma/ItemDatabase.cpp" "Chroma/RefreshItemsData.cpp" "Chroma/inc/Action.h")
+ "Chroma/inc/ItemDefinations.h" "Chroma/inc/ItemDatabase.h" "Chroma/ItemDatabase.cpp" "Chroma/RefreshItemsData.cpp" "Chroma/inc/Action.h" "Chroma/JoinRequest.cpp" "Chroma/EnterGame.cpp")
 
 target_include_directories(ChromaServer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Chroma/inc

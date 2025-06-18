@@ -16,13 +16,13 @@ void PacketHandler::Text(Client cli)
 
     if (!ply || !m_tank_packet || !m_tank_packet->data || m_tank_packet->dataLength < 5)
     {
-        Logger("Invalid m_tank_packet or player reference.", LogType::Error);
+        Logger("Invalid tank packet or player reference.", LogType::Error);
         return;
     }
 
     if (m_text_packet.empty())
     {
-        Logger("Received empty text packet.", LogType::Warning);
+        Logger("Received empty text packet.", LogType::Error);
         return;
     }
 
@@ -40,11 +40,11 @@ void PacketHandler::Text(Client cli)
     {
         ply->Login(m_text_packet, false, true);
     }
-    else if (action == "refresh_item_data\n")
+    else if (action.starts_with("refresh_item_data"))
     {
         Action::RefreshItemsData(cli);
     }
-    else if (action == "enter_game")
+    else if (action.starts_with("enter_game"))
     {
         Action::EnterGame(cli);
     }
@@ -52,9 +52,13 @@ void PacketHandler::Text(Client cli)
     {
         Action::JoinRequest(cli);
     }
+    else if (action.starts_with("quit"))
+    {
+        enet_peer_disconnect_later(ply->GetPeer(), 0);
+    }
     else
     {
-        Logger("Unhandled Action Received: " + action, LogType::Error);
+        Logger("Unhandled Action Received: " + action, LogType::Warning);
     }
 }
 
@@ -66,7 +70,7 @@ void PacketHandler::Tank(Client cli)
     {
     default:
     {
-        Logger("Unhandled Tank Packet Received: " + Packet::GetTankPacketName(packetType), LogType::Debug);
+        Logger("Unhandled Tank Packet Received: " + Packet::GetTankPacketName(packetType), LogType::Warning);
         break;
     }
     }
@@ -91,7 +95,7 @@ void PacketHandler::ProcessPacket(Client cli)
     }
     default:
     {
-        Logger("Unknown Packet Received: " + Packet::GetTankPacketName(packetType), LogType::Debug);
+        Logger("Unknown Packet Received: " + Packet::GetTankPacketName(packetType), LogType::Warning);
         break;
     }
     }
