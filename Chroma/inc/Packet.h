@@ -123,7 +123,7 @@ struct TankPacket
 	uint32_t Padding_3 = 0;
 	uint32_t TargetX = 0;
 	uint32_t TargetY = 0;
-	uint32_t PacketLenght = 0;
+	uint32_t PacketLength = 0;
 };
 
 class Packet

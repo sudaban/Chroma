@@ -33,8 +33,11 @@ bool ItemDatabase::Decode(const std::string& path)
     }
 
     items_data_size = std::filesystem::file_size(path);
-
+   
     std::vector<uint8_t> buffer(items_data_size);
+
+    items_data = new uint8_t[items_data_size];
+
     {
         std::ifstream file(path, std::ios::binary);
         if (!file || !file.read(reinterpret_cast<char*>(buffer.data()), items_data_size)) {
@@ -153,7 +156,7 @@ bool ItemDatabase::Decode(const std::string& path)
         if (version >= 18) read(item.rendererHash);
         if (version >= 19) {
             for (int j = 0; j < 9; ++j)
-                read(item.newInt5);
+                read(item.newInt5[j]);
         }
         if (version >= 21) {
             read(item.newInt4);

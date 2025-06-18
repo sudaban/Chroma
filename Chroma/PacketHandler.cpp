@@ -2,6 +2,7 @@
 #include "Packet.h"
 #include "Log.h"
 #include "Text.h"
+#include <Action.h>
 
 PacketHandler::PacketHandler(ENetPacket* p)
 {
@@ -22,7 +23,7 @@ void PacketHandler::Text(Client cli)
 
     if (raw.empty())
     {
-        Logger("Received empty text m_packet.", LogType::Warning);
+        Logger("Received empty text packet.", LogType::Warning);
         return;
     }
 
@@ -42,7 +43,7 @@ void PacketHandler::Text(Client cli)
     }
     else if (action.find("refresh_item_data\n") != std::string::npos)
     {
-        Logger("Cli requested item data", LogType::Info);
+        Action::RefreshItemsData(cli);
     }
     else
     {

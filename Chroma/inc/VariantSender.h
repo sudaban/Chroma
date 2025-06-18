@@ -49,7 +49,7 @@ public:
         v.send(p->GetPeer());
     }
     
-    static void OnSuperMain(Player* p, uint32_t itemhash, const std::string cdn_path, const std::string cache_path, const std::string blocked, const std::string protocol, int ply_tribute_hash)
+    static void OnSuperMain(Player* p, uint32_t itemhash, const std::string cdn_path, const std::string cache_path, const std::string blocked, const std::string settings, int ply_tribute_hash)
     {
         Variant v;
         v.add("OnSuperMainStartAcceptLogonHrdxs47254722215a");
@@ -57,7 +57,7 @@ public:
         v.add(cdn_path);
         v.add(cache_path);
         v.add(blocked);
-        v.add(protocol);
+        v.add(settings);
         //v.add(ply_tribute_hash);
         v.send(p->GetPeer());
     }
@@ -149,20 +149,20 @@ public:
         v.send(p->GetPeer());
     }
 
-    static void OnSendToServer(Player* p, int port, int pid, const std::string& data, const std::string nickname)
+    static void OnSendToServer(Player* p, int port, int token, int player_id, const std::string& ip, const std::string& door_id, const std::string& uuidtoken, int lmode, const std::string nickname)
     {
         Variant v;
         v.add("OnSendToServer");
         v.add(port);
-        v.add(348745); // random value, can be better with randomizing
-        v.add(pid);
-        v.add(data);
-        v.add(1); // not sure
+        v.add(token);
+        v.add(player_id);
+        v.add(ip + "|" + door_id + "|" + uuidtoken); // uuidtoken = server login: RID, world login: -1
+        v.add(lmode); // server login: 1, world login: 3
         v.add(nickname);
         v.send(p->GetPeer());
     }
 
-    static void OnCountdownStart(Player* p, int netid,int score, int time)
+    static void OnCountdownStart(Player* p, int netid, int score, int time)
     {
         Variant v(0, netid);
         v.add("OnCountdownStart");
@@ -175,6 +175,7 @@ public:
     static void OnCountdownUpdate(Player* p, int netid, int score)
     {
         Variant v(0, netid);
+        v.add("OnCoundownUpdate");
         v.add(score);
         v.send(p->GetPeer());
     }
@@ -222,11 +223,35 @@ public:
         v.send(p->GetPeer());
     }
     
-    static void OnSetFreeze(Player* p, int netid,int state)
+    static void OnSetFreezeState(Player* p, int netid, int state)
     {
         Variant v(0, netid);
-        v.add("OnSetFreeze");
+        v.add("OnSetFreezeState");
         v.add(state);
+        v.send(p->GetPeer());
+    }
+
+    static void OnInvis(Player* p, int netid, int state)
+    {
+        Variant v(0, netid);
+        v.add("OnInvis");
+        v.add(state);
+        v.send(p->GetPeer());
+    }
+
+    static void OnKilled(Player* p, int netid)
+    {
+        Variant v(0, netid);
+        v.add("OnKilled");
+        v.add(1);
+        v.send(p->GetPeer());
+    }
+
+    static void OnAction(Player* p, int netid, const std::string& command)
+    {
+        Variant v(0, netid);
+        v.add("OnAction");
+        v.add(command);
         v.send(p->GetPeer());
     }
 
@@ -236,6 +261,7 @@ public:
         v.add("OnParticleEffect");
         v.add(effect);
         v.add((float)pos_x, (float)pos_y);
+        v.send(p->GetPeer());
     }
 };
 

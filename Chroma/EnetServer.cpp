@@ -129,7 +129,7 @@ void ENetServer::Run()
 
                 sendPacket(event.peer, 1, NULL, 1);
                 
-                VariantSender::OnConsoleMessage(player, "Welcome to `8Chroma`` Private server. Server is currently at `4development ``by our team.");
+                VariantSender::OnConsoleMessage(player, "`$Welcome to `6Chroma`` Private Server. Server is currently at `4development ``by our team.");
                 break;
             }
             case ENET_EVENT_TYPE_RECEIVE:

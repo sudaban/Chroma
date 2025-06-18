@@ -53,8 +53,7 @@ void Player::Login(const std::string& data, bool guest, bool new_login)
 	m_mac = Text::parser("mac", data);
 	m_platform_id = Text::parser("platformID", data);
 
-	VariantSender::OnSuperMain(this, ItemDatabase::items_data_hash, "www.growtopia1.com", "cache", "chroma-based-source", "proto=200|choosemusic=audio/mp3/western.mp3|active_holiday=0|wing_week_day=0|ubi_week_day=0|server_tick=8310098|clash_active=1|drop_lavacheck_faster=1|isPayingUser=1|usingStoreNavigation=1|enableInventoryTab=1|bigBackpack=1|", 0);
-	VariantSender::OnRequestWorldMenu(this);
+	VariantSender::OnSuperMain(this, ItemDatabase::items_data_hash, "cdn.growps.eu", "cache", "chroma-based-source", "proto=200|choosemusic=audio/mp3/western.mp3|active_holiday=0|wing_week_day=0|ubi_week_day=0|server_tick=8310098|clash_active=1|drop_lavacheck_faster=1|isPayingUser=1|usingStoreNavigation=1|enableInventoryTab=1|bigBackpack=1|", 0);
 }
 
 
@@ -67,20 +66,20 @@ void Player::SendPacket(TankPacket& tp, uint8_t* extraData, int extraDataLength)
 	int DataLength = 0;
 
 	if (extraData == nullptr || extraDataLength == 0) {
-		tp.PacketLenght = 0;
+		tp.PacketLength = 0;
 		DataLength = sizeof(TankPacket);
 		dataToSend = new uint8_t[DataLength];
 		std::memcpy(dataToSend, &tp, sizeof(TankPacket));
 	}
 	else {
-		tp.PacketLenght = extraDataLength;
+		tp.PacketLength = extraDataLength;
 		DataLength = sizeof(TankPacket) + extraDataLength;
 		dataToSend = new uint8_t[DataLength];
 		std::memcpy(dataToSend, &tp, sizeof(TankPacket));
 		std::memcpy(dataToSend + sizeof(TankPacket), extraData, extraDataLength);
 	}
 
-	if (tp.PacketLenght > 0 && dataToSend[sizeof(TankPacket)] == 4)
+	if (tp.PacketLength > 0 && dataToSend[sizeof(TankPacket)] == 4)
 	{
 		DataLength -= 1;
 	}
