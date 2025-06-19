@@ -52,7 +52,7 @@ void PacketHandler::Text(Client cli)
     {
         Action::JoinRequest(cli);
     }
-    else if (action.starts_with("quit"))
+    else if (action == "quit")
     {
         enet_peer_disconnect_later(ply->GetPeer(), 0);
     }
