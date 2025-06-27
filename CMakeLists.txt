@@ -16,6 +16,13 @@ add_executable(ChromaServer
     Chroma/PacketHandler.cpp
     Chroma/Player.cpp
     Chroma/Client.cpp
+    Chroma/ItemDatabase.cpp 
+    Chroma/RefreshItemsData.cpp
+    Chroma/inc/Action.h
+    Chroma/JoinRequest.cpp
+    Chroma/EnterGame.cpp
+    Chroma/World.cpp
+    Chroma/WorldManager.cpp
     Chroma/inc/Player.h
     Chroma/inc/EnetServer.h
     Chroma/inc/Log.h
@@ -23,9 +30,12 @@ add_executable(ChromaServer
     Chroma/inc/PacketHandler.h
     Chroma/inc/Text.h
     Chroma/inc/Variant.h
-    
+    Chroma/inc/World.h
+    Chroma/inc/WorldManager.h
     Chroma/inc/Client.h
- "Chroma/inc/ItemDefinations.h" "Chroma/inc/ItemDatabase.h" "Chroma/ItemDatabase.cpp" "Chroma/RefreshItemsData.cpp" "Chroma/inc/Action.h" "Chroma/JoinRequest.cpp" "Chroma/EnterGame.cpp")
+    Chroma/inc/ItemDefinations.h
+    Chroma/inc/ItemDatabase.h 
+)
 
 target_include_directories(ChromaServer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Chroma/inc
