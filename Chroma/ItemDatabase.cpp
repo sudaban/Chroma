@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "Packet.h"
 #include <filesystem>
+#include <cstring>
 
 int ItemDatabase::items_data_size = 0;
 uint8_t* ItemDatabase::items_data = nullptr;
