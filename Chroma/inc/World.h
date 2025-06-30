@@ -3,6 +3,8 @@
 
 #pragma once
 #include <string>
+#include <vector>
+#include "Tile.h"
 
 class World {
 public:
@@ -17,7 +19,7 @@ private:
     std::string m_name = "";
     int m_level = 0;
     uint32_t m_width = 0, m_height = 0;
-    uint32_t m_flags = 0;
+    std::vector<Tile> m_tiles = {};
 };
 
 

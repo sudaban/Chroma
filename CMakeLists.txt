@@ -23,6 +23,8 @@ add_executable(ChromaServer
     Chroma/EnterGame.cpp
     Chroma/World.cpp
     Chroma/WorldManager.cpp
+    Chroma/Tile.cpp
+    Chroma/TileExtra.cpp
     Chroma/inc/Player.h
     Chroma/inc/EnetServer.h
     Chroma/inc/Log.h
@@ -35,6 +37,8 @@ add_executable(ChromaServer
     Chroma/inc/Client.h
     Chroma/inc/ItemDefinations.h
     Chroma/inc/ItemDatabase.h 
+    Chroma/inc/Tile.h
+    Chroma/inc/TileExtra.h
 )
 
 target_include_directories(ChromaServer PRIVATE
