@@ -1,7 +1,6 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#pragma once
 #include <string>
 #include <vector>
 #include "Tile.h"
