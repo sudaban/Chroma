@@ -3,6 +3,7 @@
 
 #include "World.h"
 #include <vector>
+#include "Player.h"
 #include <memory>
 
 class WorldManager {
@@ -13,6 +14,7 @@ public:
     World* add_world(const std::string& name, int level = 0);
     World* get_world(const std::string& name);
     bool delete_world(const std::string& name);
+    bool join_world(Player* p, const std::string& name);
     const std::vector<std::unique_ptr<World>>& get_all_worlds() const;
 
 private:

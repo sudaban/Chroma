@@ -2,7 +2,6 @@
 #define TILE_H
 
 #include <vector>
-#include "TileExtra.h"
 #include <cstdint>
 
 class Tile
@@ -21,15 +20,11 @@ public:
     void setParent(uint16_t pt);
     void setFlags(uint16_t flags);
 
-    std::vector<TileExtra>& getTileExtras();
-    const std::vector<TileExtra>& getTileExtras() const;
-
 private:
     uint16_t m_bg;
     uint16_t m_fg;
     uint16_t m_pt; // parent tile
     uint16_t m_flags;
-    std::vector<TileExtra> m_tile_extras;
 };
 
 #endif // !TILE_H

@@ -1,12 +1,12 @@
-#include "inc/Tile.h"
+#include "Tile.h"
 
 Tile::Tile()
-    : m_bg(0), m_fg(0), m_pt(0), m_flags(0), m_tile_extras()
+    : m_bg(0), m_fg(0), m_pt(0), m_flags(0)
 {
 
 }
 
-Tile::~Tile() {}
+Tile::~Tile() = default; 
 
 uint16_t Tile::getBackground() const
 {
@@ -46,15 +46,4 @@ void Tile::setParent(uint16_t pt)
 void Tile::setFlags(uint16_t flags)
 {
     m_flags = flags;
-}
-
-// access
-std::vector<TileExtra>& Tile::getTileExtras()
-{
-    return m_tile_extras;
-}
-
-const std::vector<TileExtra>& Tile::getTileExtras() const
-{
-    return m_tile_extras;
 }

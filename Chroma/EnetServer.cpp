@@ -8,6 +8,7 @@
 #include "Client.h"
 #include "Variant.h"
 #include "VariantSender.h"
+#include "inc/WorldManager.h"
 
 ENetServer::ENetServer(const std::string& address, uint16_t port, size_t maxClients, size_t channels)
     : m_address(address), m_port(port), m_maxClients(maxClients), m_channels(channels)
@@ -28,7 +29,7 @@ ENetServer::ENetServer(const std::string& address, uint16_t port, size_t maxClie
         Logger("Failed to create ENet host, port might be in use.", LogType::Error);
         throw std::runtime_error("Failed to create ENet host");
     }
-    m_host->usingNewPacketForServer = true; // Growtopia 5.19 Protocol (You need to modify enet)
+    //m_host->usingNewPacketForServer = true; // Growtopia 5.19 Protocol (You need to modify enet)
     m_host->checksum = enet_crc32;
     enet_host_compress_with_range_coder(m_host);
 
@@ -109,6 +110,7 @@ void ENetServer::sendPacket(ENetPeer* peer, int packetType, const void* data, in
 void ENetServer::Run()
 {
     ENetEvent event;
+    WorldManager* wm;
 
     while (running_)
     {
@@ -136,7 +138,7 @@ void ENetServer::Run()
 
                 std::string text_packet(reinterpret_cast<char*>(event.packet->data + 4), event.packet->dataLength - 4);
 
-                Client cli((Player*)event.peer->data, event.packet, text_packet);
+                Client cli((Player*)event.peer->data, wm, event.packet, text_packet);
 
                 PacketHandler p(event.packet, text_packet);
                 p.ProcessPacket(cli);

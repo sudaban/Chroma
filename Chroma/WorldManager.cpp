@@ -1,5 +1,8 @@
 #include "inc/WorldManager.h"
 #include <algorithm>
+#include <filesystem>
+#include "inc/Packet.h"
+#include "inc/Log.h"
 
 WorldManager::WorldManager() = default;
 WorldManager::~WorldManager() = default;
@@ -20,6 +23,35 @@ World* WorldManager::get_world(const std::string& name) {
         }
     }
     return nullptr;
+}
+
+bool WorldManager::join_world(Player* p, const std::string& name)
+{
+    World* w = nullptr;
+    std::string path = "worlds/" + name + ".bin";
+    if (get_world(name) == nullptr)
+    {
+        if (std::filesystem::exists(path))
+        {
+            //todo read hash and add world
+        }
+        else 
+        {
+            //w->generate_world();
+            //todo generate new world and read hash, add world
+        }
+    }
+    //todo w->add_player(p) and define m_players to world.h
+
+    unsigned int world_data = w->Pack();
+
+    TankPacket t;
+    t.Type = PACKET_SEND_MAP_DATA;
+    t.State = 8;
+    t.PacketLength = sizeof(world_data);
+    Logger("packet length: " + std::to_string(t.PacketLength), LogType::Debug);
+    p->SendPacket(t, reinterpret_cast<uint8_t*>(&world_data), t.PacketLength);
+    return true;
 }
 
 bool WorldManager::delete_world(const std::string& name) {
