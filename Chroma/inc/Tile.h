@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "TileExtra.h"
+#include <cstdint>
 
 class Tile
 {
