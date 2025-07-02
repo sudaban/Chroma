@@ -78,17 +78,17 @@ std::vector<uint8_t> World::Pack()
     total += 4; // flags
     total += 2; // name length
     total += m_name.length();
-    total += 4; // height
     total += 4; // width
+    total += 4; // height
     total += 4; // area size
     total += 4; // undefined map data-1
     total += 1; // undefined map data-2
     total += m_tiles.size() * 8; // tiles
-    total += 4; // object size
-    total += 4; // last object id
     total += 4; // undefined object data-1
     total += 4; // undefined object data-2
     total += 4; // undefined object data-3
+    total += 4; // object size
+    total += 4; // last object id
     total += m_objects.size() * 16; // objects
     total += 4; // active weather
     total += 4; // base weather
@@ -120,8 +120,8 @@ std::vector<uint8_t> World::Pack()
     if (!safe_write(&name_length, sizeof(name_length))) return {};
     if (!safe_write(m_name.data(), name_length)) return {};
 
-    if (!safe_write(&height, sizeof(height))) return {};
     if (!safe_write(&width, sizeof(width))) return {};
+    if (!safe_write(&height, sizeof(height))) return {};
     if (!safe_write(&area, sizeof(area))) return {};
     if (!safe_write(&unk1, sizeof(unk1))) return {};
     if (!safe_write(&unk2, sizeof(unk2))) return {};

@@ -117,30 +117,12 @@ bool WorldManager::join_world(Player* p, const std::string& name)
         return false;
     }
 
-    // w->add_player(p); // TODO
-
-    std::vector<uint8_t> tp(60);
-
-    size_t os = 0;
-    uint32_t mtype = 4, ptype = 4, state = 8;
-    
-    memcpy(tp.data() + os, &mtype, sizeof(mtype));
-    os += sizeof(mtype);
-    memcpy(tp.data() + os, &ptype, sizeof(ptype));
-    os += sizeof(ptype);
-    memcpy(tp.data() + os, &state, sizeof(state));
-    os += sizeof(state);
-    
     std::vector<uint8_t> world_data = w->Pack();
-    
-    std::vector<uint8_t> full_data;
-    full_data.reserve(tp.size() + world_data.size());
-    full_data.insert(full_data.end(), tp.begin(), tp.end());
-    full_data.insert(full_data.end(), world_data.begin(), world_data.end());
-    
-    ENetPacket* packet = enet_packet_create(full_data.data(), full_data.size(), ENET_PACKET_FLAG_RELIABLE);
-    enet_peer_send(p->GetPeer(), 0, packet);
-    
+
+    TankPacket t;
+    t.Type = PACKET_SEND_MAP_DATA;
+    t.State = 8;
+    p->SendPacket(t, world_data.data(), world_data.size());
     return true;
 }
 
