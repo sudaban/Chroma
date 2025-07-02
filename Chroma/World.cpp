@@ -81,11 +81,15 @@ std::vector<uint8_t> World::Pack()
     total += 4; // height
     total += 4; // width
     total += 4; // area size
-    total += 4; // undefined data-1
-    total += 1; // undefined data-2
+    total += 4; // undefined map data-1
+    total += 1; // undefined map data-2
     total += m_tiles.size() * 8; // tiles
     total += 4; // object size
     total += 4; // last object id
+    total += 4; // undefined object data-1
+    total += 4; // undefined object data-2
+    total += 4; // undefined object data-3
+    total += m_objects.size() * 16; // objects
     total += 4; // active weather
     total += 4; // base weather
 
@@ -122,7 +126,8 @@ std::vector<uint8_t> World::Pack()
     if (!safe_write(&unk1, sizeof(unk1))) return {};
     if (!safe_write(&unk2, sizeof(unk2))) return {};
 
-    for (const auto& t : m_tiles) {
+    for (const auto& t : m_tiles) 
+    {
         uint16_t fg = t.getForeground();
         uint16_t bg = t.getBackground();
         uint16_t pt = t.getParent();
@@ -134,10 +139,32 @@ std::vector<uint8_t> World::Pack()
         if (!safe_write(&fl, sizeof(fl))) return {};
     }
 
-    uint32_t object_size = 0; // placeholder
-    uint32_t last_object_id = -1;
+    uint32_t object_size = m_objects.size();
+    uint32_t last_object_id = m_object_id - 1;
     if (!safe_write(&object_size, sizeof(object_size))) return {};
     if (!safe_write(&last_object_id, sizeof(last_object_id))) return {};
+
+    uint32_t unk3, unk4, unk5;
+    if (!safe_write(&unk3, sizeof(unk3))) return {};
+    if (!safe_write(&unk4, sizeof(unk4))) return {};
+    if (!safe_write(&unk5, sizeof(unk5))) return {};
+
+    for (const auto& o : m_objects) 
+    {
+        uint16_t id = o.id;
+        float x = o.x;
+        float y = o.y;
+        uint8_t count = o.count;
+        uint8_t flags = o.flags;
+        uint32_t o_id = o.object_id;
+
+        if (!safe_write(&id, sizeof(id))) return {};
+        if (!safe_write(&x, sizeof(x))) return {};
+        if (!safe_write(&y, sizeof(y))) return {};
+        if (!safe_write(&count, sizeof(count))) return {};
+        if (!safe_write(&flags, sizeof(flags))) return {};
+        if (!safe_write(&o_id, sizeof(o_id))) return {};
+    }
 
     uint32_t active_weather = m_active_weather;
     uint32_t base_weather = m_base_weather;

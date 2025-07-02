@@ -10,6 +10,17 @@
 
 class World {
 public:
+
+    struct Object
+    {
+        uint16_t id;
+        float x;
+        float y;
+        uint8_t count;
+        uint8_t flags;
+        uint32_t object_id;
+    };
+
     World();
     World(const std::string& name, int level = 0);
     World(const World& copy);
@@ -37,12 +48,16 @@ public:
     uint32_t get_base_weather() const;
     void set_base_weather(uint32_t base_weather);
 
+    inline void add_object(Object o) {m_objects.push_back(o);}
+
 private:
     std::string m_name = "";
     int m_level = 0;
     uint32_t m_width = 100, m_height = 60;
     std::vector<Tile> m_tiles = {};
+    std::vector<Object> m_objects = {};
     uint32_t m_active_weather = 0, m_base_weather = 0;
+    uint32_t m_object_id = 1;
 };
 
 
