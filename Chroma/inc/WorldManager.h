@@ -15,6 +15,7 @@ public:
     World* get_world(const std::string& name);
     bool delete_world(const std::string& name);
     bool join_world(Player* p, const std::string& name);
+    void generate_new_world(const std::string& name);
     const std::vector<std::unique_ptr<World>>& get_all_worlds() const;
 
 private:

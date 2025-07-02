@@ -139,15 +139,17 @@ std::vector<uint8_t> World::Pack()
         if (!safe_write(&fl, sizeof(fl))) return {};
     }
 
+    uint32_t unk3, unk4, unk5;
+    if (!safe_write(&unk3, sizeof(unk3))) return {};
+    if (!safe_write(&unk4, sizeof(unk4))) return {};
+    if (!safe_write(&unk5, sizeof(unk5))) return {};
+
     uint32_t object_size = m_objects.size();
     uint32_t last_object_id = m_object_id - 1;
     if (!safe_write(&object_size, sizeof(object_size))) return {};
     if (!safe_write(&last_object_id, sizeof(last_object_id))) return {};
 
-    uint32_t unk3, unk4, unk5;
-    if (!safe_write(&unk3, sizeof(unk3))) return {};
-    if (!safe_write(&unk4, sizeof(unk4))) return {};
-    if (!safe_write(&unk5, sizeof(unk5))) return {};
+
 
     for (const auto& o : m_objects) 
     {
