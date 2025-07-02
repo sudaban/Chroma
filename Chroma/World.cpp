@@ -84,6 +84,7 @@ std::vector<uint8_t> World::Pack()
     total += 4; // undefined map data-1
     total += 1; // undefined map data-2
     total += m_tiles.size() * 8; // tiles
+    total += 4; // bune aga
     total += 4; // undefined object data-1
     total += 4; // undefined object data-2
     total += 4; // undefined object data-3
@@ -107,7 +108,8 @@ std::vector<uint8_t> World::Pack()
         };
 
     uint16_t version = 25;
-    uint32_t flags = 0;
+    uint32_t buneaga = 0;
+    uint32_t flags = 64;
     uint32_t height = m_height;
     uint32_t width = m_width;
     uint32_t area = width * height;
@@ -139,7 +141,9 @@ std::vector<uint8_t> World::Pack()
         if (!safe_write(&fl, sizeof(fl))) return {};
     }
 
-    uint32_t unk3, unk4, unk5;
+    if (!safe_write(&buneaga, sizeof(buneaga))) return {};
+
+    uint32_t unk3 = 0, unk4 = 0, unk5 = 0;
     if (!safe_write(&unk3, sizeof(unk3))) return {};
     if (!safe_write(&unk4, sizeof(unk4))) return {};
     if (!safe_write(&unk5, sizeof(unk5))) return {};
@@ -148,9 +152,7 @@ std::vector<uint8_t> World::Pack()
     uint32_t last_object_id = m_object_id - 1;
     if (!safe_write(&object_size, sizeof(object_size))) return {};
     if (!safe_write(&last_object_id, sizeof(last_object_id))) return {};
-
-
-
+    
     for (const auto& o : m_objects) 
     {
         uint16_t id = o.id;
