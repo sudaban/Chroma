@@ -27,30 +27,46 @@ World* WorldManager::get_world(const std::string& name) {
 
 bool WorldManager::join_world(Player* p, const std::string& name)
 {
-    World* w = nullptr;
-    std::string path = "worlds/" + name + ".bin";
-    if (get_world(name) == nullptr)
+    World* w = get_world(name);
+    if (!w)
     {
+        std::string path = "worlds/" + name + ".bin";
         if (std::filesystem::exists(path))
         {
-            //todo read hash and add world
+            auto world = std::make_unique<World>();
+            world->set_name(name);
+            world->set_width(100);
+            world->set_height(60);
+            w = world.get(); // point
+            m_worlds.push_back(std::move(world)); // pushhhhhhhhhh
         }
-        else 
+        else
         {
-            //w->generate_world();
-            //todo generate new world and read hash, add world
+            // create new world
+            auto world = std::make_unique<World>();
+            world->set_name(name);
+            world->set_width(100);
+            world->set_height(60);
+            w = world.get();
+            m_worlds.push_back(std::move(world));
         }
     }
-    //todo w->add_player(p) and define m_players to world.h
 
-    unsigned int world_data = w->Pack();
+    if (!w) {
+        Logger("World creation failed", LogType::Error);
+        return false;
+    }
+
+   // w->add_player(p); // to-do
+
+    std::vector<uint8_t> world_data = w->Pack();
 
     TankPacket t;
     t.Type = PACKET_SEND_MAP_DATA;
     t.State = 8;
-    t.PacketLength = sizeof(world_data);
+    t.PacketLength = (uint32_t)world_data.size();
     Logger("packet length: " + std::to_string(t.PacketLength), LogType::Debug);
-    p->SendPacket(t, reinterpret_cast<uint8_t*>(&world_data), t.PacketLength);
+    p->SendPacket(t, world_data.data(), t.PacketLength);
     return true;
 }
 

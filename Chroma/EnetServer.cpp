@@ -29,7 +29,7 @@ ENetServer::ENetServer(const std::string& address, uint16_t port, size_t maxClie
         Logger("Failed to create ENet host, port might be in use.", LogType::Error);
         throw std::runtime_error("Failed to create ENet host");
     }
-    //m_host->usingNewPacketForServer = true; // Growtopia 5.19 Protocol (You need to modify enet)
+    m_host->usingNewPacketForServer = true; // Growtopia 5.19 Protocol (You need to modify enet)
     m_host->checksum = enet_crc32;
     enet_host_compress_with_range_coder(m_host);
 
@@ -110,7 +110,9 @@ void ENetServer::sendPacket(ENetPeer* peer, int packetType, const void* data, in
 void ENetServer::Run()
 {
     ENetEvent event;
-    WorldManager* wm;
+    WorldManager wm_instance; // real obj
+    WorldManager* wm = &wm_instance;
+
 
     while (running_)
     {

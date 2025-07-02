@@ -59,3 +59,5 @@ ChromaServer.vcxproj
 ChromaServer.vcxproj.filters
 ChromaServer.vcxproj.user
 ALL_BUILD.vcxproj.user
+INSTALL.vcxproj.user
+ZERO_CHECK.vcxproj.user

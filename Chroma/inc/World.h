@@ -13,10 +13,29 @@ public:
     World();
     World(const std::string& name, int level = 0);
     World(const World& copy);
-    unsigned int Pack();
+    std::vector<uint8_t> Pack();
     ~World();
 
     const std::string& get_name() const;
+    void set_name(const std::string& name);
+
+    int get_level() const;
+    void set_level(int level);
+
+    uint32_t get_width() const;
+    void set_width(uint32_t width);
+
+    uint32_t get_height() const;
+    void set_height(uint32_t height);
+
+    const std::vector<Tile>& get_tiles() const;
+    void set_tiles(const std::vector<Tile>& tiles);
+
+    uint32_t get_active_weather() const;
+    void set_active_weather(uint32_t active_weather);
+
+    uint32_t get_base_weather() const;
+    void set_base_weather(uint32_t base_weather);
 
 private:
     std::string m_name = "";
